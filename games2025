@@ -1,0 +1,86 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Screen dimensions
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Create the screen
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# Title and Icon
+pygame.display.set_caption("War Game")
+icon = pygame.image.load('media15pyb/ship.jpg')  # Replace with your ship image file
+pygame.display.set_icon(icon)
+
+# Load images
+player_img = pygame.image.load('media15pyb.ship.png')  # Replace with your ship image file
+enemy_img = pygame.image.load('media15pyb/enemy.png')  # Replace with your enemy image file
+
+# Player
+player_x = 370
+player_y = 480
+player_x_change = 0
+
+# Enemy
+enemy_x = random.randint(0, SCREEN_WIDTH - 64)
+enemy_y = random.randint(50, 150)
+enemy_x_change = 2
+enemy_y_change = 40
+
+# Function to draw the player
+def player(x, y):
+    screen.blit(player_img, (x, y))
+
+# Function to draw the enemy
+def enemy(x, y):
+    screen.blit(enemy_img, (x, y))
+
+# Game loop
+running = True
+while running:
+    # RGB - Red, Green, Blue
+    screen.fill((0, 0, 0))
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+        # Keystroke events
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x_change = -5
+            if event.key == pygame.K_RIGHT:
+                player_x_change = 5
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                player_x_change = 0
+    
+    # Player movement
+    player_x += player_x_change
+    if player_x <= 0:
+        player_x = 0
+    elif player_x >= SCREEN_WIDTH - 64:
+        player_x = SCREEN_WIDTH - 64
+    
+    # Enemy movement
+    enemy_x += enemy_x_change
+    if enemy_x <= 0:
+        enemy_x_change = 2
+        enemy_y += enemy_y_change
+    elif enemy_x >= SCREEN_WIDTH - 64:
+        enemy_x_change = -2
+        enemy_y += enemy_y_change
+    
+    # Draw the player and enemy
+    player(player_x, player_y)
+    enemy(enemy_x, enemy_y)
+    
+    # Update the display
+    pygame.display.update()
+
+# Quit Pygame
+pygame.quit()
